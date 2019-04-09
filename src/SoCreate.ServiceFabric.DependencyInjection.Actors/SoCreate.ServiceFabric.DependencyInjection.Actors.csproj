@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/SoCreate/service-fabric-dependency-injection</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>DependencyInjection ServiceFabric ServiceFabricActors Actors</PackageTags>
-    <PackageIconUrl>https://github.com/SoCreate/service-fabric-dependency-injection/master/assets/icon-64x64.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/SoCreate/service-fabric-dependency-injection/master/assets/icon-64x64.png</PackageIconUrl>
     <Description>Enables dependency injection to be easily used with the Service Fabric Actor model.</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
