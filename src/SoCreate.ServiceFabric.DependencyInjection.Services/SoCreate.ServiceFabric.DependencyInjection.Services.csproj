@@ -11,6 +11,7 @@
     <PackageTags>DependencyInjection ServiceFabric ServiceFabricServices</PackageTags>
     <PackageIconUrl>https://github.com/SoCreate/service-fabric-dependency-injection/master/assets/icon-64x64.png</PackageIconUrl>
     <Description>Enables dependency injection to be easily used with the Service Fabric Reliable Services model.</Description>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
