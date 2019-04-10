@@ -66,6 +66,97 @@ More complete example of the "Program.cs" file:
     }
 ```
 
+### Example
+This example show how to get a class registed with the dependency injection container into the constructor of your Stateless Service.  In this case the example class is "SomeService" which implements "ISomeService" but this could be any class registered with the dependency injection container.
+
+MyStatelessService.cs
+```
+using Microsoft.ServiceFabric.Services.Runtime;
+using System;
+using System.Fabric;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace MyExample
+{
+    internal sealed class MyStatelessService : StatelessService
+    {
+        private readonly ISomeService _someService;
+
+        public MyStatelessService(StatelessServiceContext context, ISomeService someService)
+            : base(context)
+        {
+            _someService = someService;
+        }
+
+        protected override async Task RunAsync(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                _someService.DoSomething();
+
+                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+            }
+        }
+    }
+}
+```
+
+MyStatelessServiceFactory.cs
+```
+using System.Fabric;
+using Microsoft.ServiceFabric.Services.Runtime;
+using SoCreate.ServiceFabric.DependencyInjection.Services;
+
+namespace MyExample
+{
+    class MyStatelessServiceFactory : IStatelessServiceCreatorFactory
+    {
+        private readonly ISomeService _someService;
+
+        public MyStatelessServiceFactory(ISomeService someService)
+        {
+            _someService = someService;
+        }
+
+        public StatelessService Create(StatelessServiceContext context)
+        {
+            return new MyStatelessService(context, _someService);
+        }
+    }
+}
+```
+
+Program.cs
+```
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SoCreate.ServiceFabric.DependencyInjection.Services;
+using System.Threading.Tasks;
+
+namespace MyExample
+{
+    internal static class Program
+    {
+        private static async Task Main()
+        {
+            await CreateHost().RunAsync();
+        }
+
+        private static IHost CreateHost()
+        {
+            return new HostBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddSingleton<ISomeService, SomeService>();
+                })
+                .UseServiceFabricStatelessServiceFactory<MyStatelessServiceFactory>("MyStatelessServiceType")
+                .Build();
+        }
+    }
+}
+
+```
 
 ### License
 
