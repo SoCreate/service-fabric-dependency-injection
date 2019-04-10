@@ -31,7 +31,7 @@ Add to HostBuilder:
     .UseServiceFabricStatefulServiceFactory("StatefulType", context => new Stateful(context))
 ```
 
-### Actor 
+#### Actor Service
 ```
     .UseServiceFabricActorServiceFactory<ActorTest>()
 ```
@@ -66,7 +66,7 @@ More complete example of the "Program.cs" file:
     }
 ```
 
-### Example
+#### Example
 This example show how to get a class registed with the dependency injection container into the constructor of your Stateless Service.  In this case the example class is "SomeService" which implements "ISomeService" but this could be any class registered with the dependency injection container.
 
 MyStatelessService.cs
