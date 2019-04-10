@@ -2,18 +2,23 @@
 Enables you to easily use the .Net Core Host Builder in your Service Fabric template to get dependency injection working within you services.  This also makes it easy to use .Net Core configuration and logging working with your services.
 
 ![Build Status](https://dev.azure.com/SoCreate/Service%20Fabric%20Dependency%20Injection/_apis/build/status/SoCreate.service-fabric-dependency-injection?branchName=master)
-[![NuGet Badge](https://buildstats.info/nuget/SoCreate.ServiceFabric.DependencyInjection.Services)](https://www.nuget.org/packages/SoCreate.ServiceFabric.DependencyInjection.Services/)
-[![NuGet Badge](https://buildstats.info/nuget/SoCreate.ServiceFabric.DependencyInjection.Actors)](https://www.nuget.org/packages/SoCreate.ServiceFabric.DependencyInjection.Actors/)
 
 ## Installation
 
-Reliable Services:
+### Reliable Services: 
+
+[![NuGet Badge](https://buildstats.info/nuget/SoCreate.ServiceFabric.DependencyInjection.Services)](https://www.nuget.org/packages/SoCreate.ServiceFabric.DependencyInjection.Services/)
+
 
     dotnet add package SoCreate.ServiceFabric.DependencyInjection.Services
 
-Reliable Actors:
+
+### Reliable Actors:
+
+[![NuGet Badge](https://buildstats.info/nuget/SoCreate.ServiceFabric.DependencyInjection.Actors)](https://www.nuget.org/packages/SoCreate.ServiceFabric.DependencyInjection.Actors/)
 
     dotnet add package SoCreate.ServiceFabric.DependencyInjection.Actors
+
 
 ## Documentation
 
@@ -31,7 +36,7 @@ Add to HostBuilder:
     .UseServiceFabricStatefulServiceFactory("StatefulType", context => new Stateful(context))
 ```
 
-### Actor 
+#### Actor Service
 ```
     .UseServiceFabricActorServiceFactory<ActorTest>()
 ```
@@ -66,7 +71,7 @@ More complete example of the "Program.cs" file:
     }
 ```
 
-### Example
+#### Example
 This example show how to get a class registed with the dependency injection container into the constructor of your Stateless Service.  In this case the example class is "SomeService" which implements "ISomeService" but this could be any class registered with the dependency injection container.
 
 MyStatelessService.cs
