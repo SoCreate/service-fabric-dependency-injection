@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83C9C9DF-80DF-493B-B620-978418CE54C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoCreate.ServiceFabric.DependencyInjection.Actors", "src\SoCreate.ServiceFabric.DependencyInjection.Actors\SoCreate.ServiceFabric.DependencyInjection.Actors.csproj", "{D49DA85D-0E52-44F7-AAB3-A7C787DDB05C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoCreate.ServiceFabric.DependencyInjection.Actors", "src\SoCreate.ServiceFabric.DependencyInjection.Actors\SoCreate.ServiceFabric.DependencyInjection.Actors.csproj", "{D49DA85D-0E52-44F7-AAB3-A7C787DDB05C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

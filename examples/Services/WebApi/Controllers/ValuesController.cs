@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ActorTest.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 
@@ -14,10 +15,19 @@ namespace WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly ILogger<ValuesController> _logger;
+
+        public ValuesController(ILogger<ValuesController> logger)
+        {
+            _logger = logger;
+        }
+
         // GET api/values
         [HttpGet]
         public async Task<IEnumerable<string>> Get()
         {
+            _logger.LogInformation("Get method called.");
+            
             var actor = ActorProxy.Create<IActorTest>(ActorId.CreateRandom());
 
             await actor.SetCountAsync(100, CancellationToken.None);

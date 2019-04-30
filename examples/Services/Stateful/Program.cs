@@ -8,7 +8,10 @@ namespace Stateful
     {
         private static async Task Main()
         {
-            await CreateHost().RunAsync();
+            using (var host = CreateHost())
+            {
+                await host.RunAsync();
+            }
         }
 
         private static IHost CreateHost()

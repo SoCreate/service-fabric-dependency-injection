@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using SoCreate.ServiceFabric.DependencyInjection.Services;
+using Microsoft.Extensions.Logging;
 
 namespace WebApi
 {
@@ -8,7 +9,10 @@ namespace WebApi
     {
         private static async Task Main()
         {
-            await CreateHost().RunAsync();
+            using (var host = CreateHost())
+            {
+                await host.RunAsync();
+            }
         }
 
         private static IHost CreateHost()
@@ -20,7 +24,8 @@ namespace WebApi
                 .ConfigureServices((context, services) =>
                 {
                 })
-                .UseServiceFabricStatelessServiceFactory("WebApiType", context => new WebApi(context))
+                .ConfigureLogging(b => b.AddDebug())
+                .UseServiceFabricStatelessServiceFactory<StatelessServiceProvider>("WebApiType")
                 .Build();
         }
     }

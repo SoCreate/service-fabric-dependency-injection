@@ -11,6 +11,7 @@ using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Data;
+using Microsoft.Extensions.Logging;
 
 namespace WebApi
 {
@@ -19,9 +20,15 @@ namespace WebApi
     /// </summary>
     internal sealed class WebApi : StatelessService
     {
-        public WebApi(StatelessServiceContext context)
+        private readonly ILogger _logger;
+        private readonly ILoggerProvider _loggerProvider;
+
+        public WebApi(StatelessServiceContext context, ILogger logger, ILoggerProvider loggerProvider)
             : base(context)
-        { }
+        {
+            _logger = logger;
+            _loggerProvider = loggerProvider;
+        }
 
         /// <summary>
         /// Optional override to create listeners (like tcp, http) for this service instance.
@@ -34,7 +41,7 @@ namespace WebApi
                 new ServiceInstanceListener(serviceContext =>
                     new KestrelCommunicationListener(serviceContext, "ServiceEndpoint", (url, listener) =>
                     {
-                        ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
+                        _logger.LogInformation($"Starting Kestrel on {url}");
 
                         return new WebHostBuilder()
                                     .UseKestrel()
@@ -43,11 +50,24 @@ namespace WebApi
                                             .AddSingleton<StatelessServiceContext>(serviceContext))
                                     .UseContentRoot(Directory.GetCurrentDirectory())
                                     .UseStartup<Startup>()
+                                    .ConfigureLogging(b => b.AddProvider(_loggerProvider))
                                     .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
                                     .UseUrls(url)
                                     .Build();
                     }))
             };
+        }
+
+        protected async override Task RunAsync(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("Application is running.");
+
+                await Task.Delay(TimeSpan.FromSeconds(20));
+            }
         }
     }
 }

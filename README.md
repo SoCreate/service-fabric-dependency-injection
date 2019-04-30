@@ -47,7 +47,10 @@ More complete example of the "Program.cs" file:
     {
         private static async Task Main()
         {
-            await CreateHost().RunAsync();
+            using (var host = CreateHost())
+            {
+                await host.RunAsync();
+            }
         }
 
         private static IHost CreateHost()
@@ -145,7 +148,10 @@ namespace MyExample
     {
         private static async Task Main()
         {
-            await CreateHost().RunAsync();
+            using (var host = CreateHost())
+            {
+                await host.RunAsync();
+            }
         }
 
         private static IHost CreateHost()
