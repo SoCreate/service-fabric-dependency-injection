@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.Extensions.DependencyInjection;
+using System.Fabric;
 
 namespace SoCreate.ServiceFabric.DependencyInjection.Services
 {
@@ -12,6 +13,7 @@ namespace SoCreate.ServiceFabric.DependencyInjection.Services
     {
         private readonly IStatelessServiceCreatorFactory _statelessServiceFactory;
         private readonly IStatefulServiceCreatorFactory _statefulServiceFactory;
+        private readonly Action<ServiceContext> _addServiceContextToLogging;
         private readonly ReliableServiceFabricRegistrationOptions _registrationOptions;
         private readonly ILogger<ServiceFabricHostedService> _logger;
 
@@ -22,6 +24,7 @@ namespace SoCreate.ServiceFabric.DependencyInjection.Services
         {
             _statelessServiceFactory = serviceProvider.GetService<IStatelessServiceCreatorFactory>();
             _statefulServiceFactory = serviceProvider.GetService<IStatefulServiceCreatorFactory>();
+            _addServiceContextToLogging = serviceProvider.GetService<Action<ServiceContext>>();
             _registrationOptions = registrationOptions;
             _logger = logger;
 
@@ -37,18 +40,28 @@ namespace SoCreate.ServiceFabric.DependencyInjection.Services
             {
                 if (_statelessServiceFactory != null)
                 {
+                    Func<StatelessServiceContext, StatelessService> create = (context) => {
+                        _addServiceContextToLogging?.Invoke(context);
+                        return _statelessServiceFactory.Create(context);
+                    };
+
                     await ServiceRuntime.RegisterServiceAsync(
                         _registrationOptions.ServiceTypeName,
-                        _statelessServiceFactory.Create,
+                        create,
                         _registrationOptions.Timeout = default,
                         _registrationOptions.CancellationToken = default
                         );
                 }
                 else
                 {
+                    Func<StatefulServiceContext, StatefulService> create = (context) => {
+                        _addServiceContextToLogging?.Invoke(context);
+                        return _statefulServiceFactory.Create(context);
+                    };
+
                     await ServiceRuntime.RegisterServiceAsync(
                         _registrationOptions.ServiceTypeName,
-                        _statefulServiceFactory.Create,
+                        create,
                         _registrationOptions.Timeout = default,
                         _registrationOptions.CancellationToken = default
                         );

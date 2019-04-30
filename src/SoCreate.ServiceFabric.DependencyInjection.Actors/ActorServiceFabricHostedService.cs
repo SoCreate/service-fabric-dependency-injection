@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.Actors.Runtime;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SoCreate.ServiceFabric.DependencyInjection.Actors
 {
     internal class ActorServiceFabricHostedService<TActor> : IHostedService where TActor : ActorBase
     {
         private readonly IActorServiceCreatorFactory _actorServiceFactory;
+        private readonly Action<ServiceContext> _addServiceContextToLogging;
         private readonly ActorServiceFabricRegistrationOptions _registrationOptions;
         private readonly ILogger<ActorServiceFabricHostedService<TActor>> _logger;
 
@@ -22,14 +25,20 @@ namespace SoCreate.ServiceFabric.DependencyInjection.Actors
             _actorServiceFactory = actorServiceFactory;
             _registrationOptions = registrationOptions;
             _logger = logger;
+            _addServiceContextToLogging = serviceProvider.GetService<Action<ServiceContext>>();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             try
             {
+                Func<StatefulServiceContext, ActorTypeInformation, ActorService> create = (context, actorType) => {
+                    _addServiceContextToLogging?.Invoke(context);
+                    return _actorServiceFactory.Create(context, actorType);
+                };
+
                 await ActorRuntime.RegisterActorAsync<TActor>(
-                    _actorServiceFactory.Create,
+                    create,
                     _registrationOptions.Timeout = default,
                     _registrationOptions.CancellationToken = default
                     );
