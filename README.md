@@ -1,7 +1,7 @@
 # Service Fabric Dependency Injection
 Enables you to easily use the .Net Core Host Builder in your Service Fabric template to get dependency injection working within you services.  This also makes it easy to use .Net Core configuration and logging working with your services.
 
-![Build Status](https://dev.azure.com/SoCreate/Service%20Fabric%20Dependency%20Injection/_apis/build/status/SoCreate.service-fabric-dependency-injection?branchName=master)
+[![Build Status](https://dev.azure.com/SoCreate/Open%20Source%20Projects/_apis/build/status/SoCreate.service-fabric-dependency-injection?branchName=master)](https://dev.azure.com/SoCreate/Open%20Source%20Projects/_build/latest?definitionId=16&branchName=master)
 
 ## Installation
 
